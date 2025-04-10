@@ -86,36 +86,6 @@ etat_suivant_cellule(Grille, Ligne, Colonne,EtatSuivant):-
 %   Sinon si la cellule est vivante ou bien a plus ou moins de 3 voisins vivants, alors EtatSuivant sera mis à 0.
 %   Cela fonctionne car si naissance est testé cela signifie que survie a échoué, donc la cellule est morte.
 
-%On vérifie si une cellule vivante survie ou meurt
-survie(Grille,Ligne,Colonne,EtatSuivant):-
-
-    cellule(Grille,Ligne,Colonne,1),                  %On récupère la cellule si elle est vivante
-    nb_voisins_vivants(Grille,Ligne,Colonne,Nombre),  %On récupère le nombre de voisins vivants
-
-    Nombre >= 2,Nombre =< 3,EtatSuivant = 1.          %On vérifie si la cellule survie                 
-%Si la cellule ne survie pas survie donnera false
-
-%On vérifie si une cellule morte nait ou reste morte
-naissance(Grille,Ligne,Colonne,EtatSuivant):-
-
-    cellule(Grille,Ligne,Colonne,0),                  %On récupère la cellule si elle est morte
-    nb_voisins_vivants(Grille,Ligne,Colonne,Nombre),  %On récupère le nombre de voisins vivants
-
-    Nombre =:= 3,EtatSuivant = 1.                     %On vérifie si la cellule nait
-naissance(_,_,_,0).                                   %Si les conditions ne sont pas remplies, la cellule reste morte
-%Si la cellule ne respecte pas les conditions a savoir être déja morte ou avoir 3 voisins vivants, EtatSuivant sera 0
-
-%On calcule chacune des règles du jeu de la vie
-etat_suivant_cellule(Grille, Ligne, Colonne,EtatSuivant):-
-    survie(Grille,Ligne,Colonne,EtatSuivant);       %On vérifie si la cellule survie
-    naissance(Grille,Ligne,Colonne,EtatSuivant).    %On vérifie si la cellule nait
-
-% Le point-virgule (`;`) permet de faire un "OU logique" entre les deux règles : 
-% - Si `survie/4` réussit (la cellule survit), alors `EtatSuivant` sera mis à 1 (cellule vivante).
-% - Si `survie/4` échoue (la cellule ne survit pas ou est déjà morte), on passe à `naissance/4` pour vérifier si la cellule peut naître.
-%   Si la cellule est morte et a exactement 3 voisins vivants, alors `EtatSuivant` sera mis à 1 (la cellule naît).
-%   Sinon si la cellule est vivante ou bien a plus ou moins de 3 voisins vivants, alors EtatSuivant sera mis à 0.
-%   Cela fonctionne car si naissance est testé cela signifie que survie a échoué, donc la cellule est morte.
 
 % Parcours de la grille ligne par ligne, en commençant par l'indice 0
 grille_suivante(Grille, NouvelleGrille):-                               
@@ -140,3 +110,4 @@ ligne_suivante([_ | Reste], [EtatSuivant | NouvellesRestantes], IndiceLigne, Ind
     etat_suivant_cellule(GrilleBase, IndiceLigne, IndiceColonne, EtatSuivant),  % On calcule l'état suivant
     NouvelleColonne is IndiceColonne + 1,
     ligne_suivante(Reste, NouvellesRestantes, IndiceLigne, NouvelleColonne, GrilleBase).
+
